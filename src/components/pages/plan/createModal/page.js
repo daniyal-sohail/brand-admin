@@ -142,7 +142,7 @@ const CreatePlanModal = ({ isOpen, onClose, onSuccess }) => {
       features: formData.features.filter(f => f.trim()) // Remove empty features
     };
 
-    const result = await postPlanData("/plans", payload);
+    const result = await postPlanData("/create-plan", payload);
 
     if (result?.status === 201) {
       toast.success("Plan created successfully");

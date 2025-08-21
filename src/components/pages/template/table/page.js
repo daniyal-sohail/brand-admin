@@ -1,34 +1,34 @@
 "use client";
 import React from "react";
 import { useCanva } from "@/context/CanvaContext";
-import { 
-  ExternalLink, 
-  Eye, 
+import {
+  ExternalLink,
+  Eye,
   Calendar,
   FileText,
   Image as ImageIcon,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
 const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
   const formatDate = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(timestamp * 1000).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const handleViewTemplate = (template) => {
     if (template.urls && template.urls.view_url) {
-      window.open(template.urls.view_url, '_blank', 'noopener,noreferrer');
+      window.open(template.urls.view_url, "_blank", "noopener,noreferrer");
     }
   };
 
   const handleEditTemplate = (template) => {
     if (template.urls && template.urls.edit_url) {
-      window.open(template.urls.edit_url, '_blank', 'noopener,noreferrer');
+      window.open(template.urls.edit_url, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -52,9 +52,12 @@ const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
           <div className="bg-white p-4 rounded-xl inline-block mb-4">
             <FileText className="w-8 h-8 text-brand-warm-brown mx-auto" />
           </div>
-          <h3 className="text-lg font-semibold text-brand-charcoal mb-2">No Templates Found</h3>
+          <h3 className="text-lg font-semibold text-brand-charcoal mb-2">
+            No Templates Found
+          </h3>
           <p className="text-brand-warm-brown">
-            No templates match your current filters. Try adjusting your search criteria.
+            No templates match your current filters. Try adjusting your search
+            criteria.
           </p>
         </div>
       </div>
@@ -84,13 +87,13 @@ const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
               </th>
             </tr>
           </thead>
-                           <tbody className="divide-y divide-brand-light-beige">
-                   {templates.map((template) => (
-                     <tr 
-                       key={template.id} 
-                       className="hover:bg-brand-light-beige transition-colors cursor-pointer"
-                       onClick={() => onTemplateClick(template)}
-                     >
+          <tbody className="divide-y divide-brand-light-beige">
+            {templates.map((template) => (
+              <tr
+                key={template.id}
+                className="hover:bg-brand-light-beige transition-colors cursor-pointer"
+                onClick={() => onTemplateClick(template)}
+              >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-16 w-16">
@@ -127,7 +130,8 @@ const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
                   <div className="flex items-center">
                     <FileText className="w-4 h-4 text-brand-warm-brown mr-2" />
                     <span className="text-sm text-brand-charcoal">
-                      {template.page_count} {template.page_count === 1 ? 'page' : 'pages'}
+                      {template.page_count}{" "}
+                      {template.page_count === 1 ? "page" : "pages"}
                     </span>
                   </div>
                 </td>
@@ -139,28 +143,28 @@ const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex items-center space-x-2">
-                                               <button
-                             onClick={(e) => {
-                               e.stopPropagation();
-                               handleViewTemplate(template);
-                             }}
-                             className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-brand-warm-brown bg-white hover:bg-brand-light-beige transition-colors"
-                             title="View Template"
-                           >
-                             <Eye className="w-3 h-3 mr-1" />
-                             View
-                           </button>
-                           <button
-                             onClick={(e) => {
-                               e.stopPropagation();
-                               handleEditTemplate(template);
-                             }}
-                             className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
-                             title="Edit Template"
-                           >
-                             <ExternalLink className="w-3 h-3 mr-1" />
-                             Edit
-                           </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewTemplate(template);
+                      }}
+                      className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-brand-warm-brown bg-white hover:bg-brand-light-beige transition-colors"
+                      title="View Template"
+                    >
+                      <Eye className="w-3 h-3 mr-1" />
+                      View
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditTemplate(template);
+                      }}
+                      className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
+                      title="Edit Template"
+                    >
+                      <ExternalLink className="w-3 h-3 mr-1" />
+                      Edit
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -172,4 +176,4 @@ const TemplateTable = ({ templates, canvaLoading, onTemplateClick }) => {
   );
 };
 
-export default TemplateTable; 
+export default TemplateTable;

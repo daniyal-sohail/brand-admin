@@ -8,7 +8,6 @@ import {
   TrendingUp,
   Tag,
   ExternalLink,
-  Copy,
   MoreVertical,
   Trash2,
 } from "lucide-react";
@@ -30,9 +29,8 @@ const AdminTemplateCard = ({ template, onTemplateUpdated, onPublishToggle }) => 
     });
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(template.canvaEditUrl);
-    toast.success("Template link copied to clipboard!");
+  const handleOpenLink = () => {
+    window.open(template.canvaEditUrl, '_blank');
   };
 
   const handlePublishToggle = async () => {
@@ -160,11 +158,11 @@ const AdminTemplateCard = ({ template, onTemplateUpdated, onPublishToggle }) => 
               <Edit3 className="w-4 h-4 text-brand-warm-brown" />
             </button>
             <button
-              onClick={handleCopyLink}
+              onClick={handleOpenLink}
               className="p-2 bg-white rounded-lg shadow-md hover:bg-brand-light-beige transition-colors"
-              title="Copy Link"
+              title="Open in New Tab"
             >
-              <Copy className="w-4 h-4 text-brand-warm-brown" />
+              <ExternalLink className="w-4 h-4 text-brand-warm-brown" />
             </button>
             <button
               onClick={() => setIsDeleteModalOpen(true)}

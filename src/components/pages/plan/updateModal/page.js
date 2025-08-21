@@ -119,7 +119,7 @@ const UpdatePlanModal = ({ isOpen, onClose, onSuccess, plan }) => {
       isActive: formData.isActive
     };
 
-    const result = await patchPlanData(`/plans/${plan._id}`, payload);
+    const result = await patchPlanData(`/update-plan/${plan._id}`, payload);
 
     if (result?.status === 200) {
       toast.success("Plan updated successfully");

@@ -31,7 +31,7 @@ const PlanPage = () => {
   // Fetch plans function
   const fetchPlans = useCallback(async () => {
     try {
-      const result = await fetchPlanData("/plans/admin");
+      const result = await fetchPlanData("/plans/admin-plans");
       
       // API returns { status, data: [ ... ], message }
       if (result?.status === 200) {

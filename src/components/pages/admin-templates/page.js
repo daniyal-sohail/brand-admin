@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 import { useAdminTemplate } from "@/context/AdminTemplateContext";
 import AdminTemplateCard from "./card/page";
+import AdminTemplateFilter from "./filter/page";
 
 const AdminTemplatesPage = () => {
   const {
@@ -34,11 +35,25 @@ const AdminTemplatesPage = () => {
   });
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit] = useState(12);
+  const [limit] = useState(10);
+  
+  // Filter state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [contentType, setContentType] = useState("");
+  const [status, setStatus] = useState("");
 
-  // Function to fetch templates with pagination
-  const fetchTemplates = useCallback(async (page = 1, limit = 12) => {
-    const url = `/admin/templates/?page=${page}&limit=${limit}`;
+  // Function to fetch templates with pagination and filters
+  const fetchTemplates = useCallback(async (page = 1, limit = 10) => {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (searchTerm) params.append('search', searchTerm);
+    if (contentType) params.append('contentType', contentType);
+    if (status) params.append('status', status);
+
+    const url = `/admin/templates/?${params.toString()}`;
     const response = await fetchTemplateData(url);
     if (response?.status === 200) {
       setTemplates(response.data.templates || []);
@@ -62,7 +77,7 @@ const AdminTemplatesPage = () => {
       });
     }
     return response;
-  }, [fetchTemplateData]);
+  }, [fetchTemplateData, searchTerm, contentType, status]);
 
   useEffect(() => {
     fetchTemplates(currentPage, limit);
@@ -74,6 +89,29 @@ const AdminTemplatesPage = () => {
 
   const handleRefresh = () => {
     fetchTemplates(currentPage, limit);
+  };
+
+  // Filter handlers
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleContentTypeChange = (value) => {
+    setContentType(value);
+    setCurrentPage(1); // Reset to first page when filtering
+  };
+
+  const handleStatusChange = (value) => {
+    setStatus(value);
+    setCurrentPage(1); // Reset to first page when filtering
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setContentType("");
+    setStatus("");
+    setCurrentPage(1);
   };
 
   const handleCopyLink = (url) => {
@@ -273,6 +311,17 @@ const AdminTemplatesPage = () => {
           </div>
         </div>
       )}
+
+      {/* Filter Component */}
+      <AdminTemplateFilter
+        searchTerm={searchTerm}
+        contentType={contentType}
+        status={status}
+        onSearchChange={handleSearchChange}
+        onContentTypeChange={handleContentTypeChange}
+        onStatusChange={handleStatusChange}
+        onClearFilters={handleClearFilters}
+      />
 
       {/* Templates Grid */}
       <div className="bg-brand-beige rounded-xl shadow-sm overflow-hidden mb-6">

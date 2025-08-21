@@ -4,9 +4,7 @@ import Link from "next/link";
 import { 
   AlertTriangle, 
   Home, 
-  ArrowLeft, 
-  Search,
-  RefreshCw 
+  ArrowLeft
 } from "lucide-react";
 
 const NotFoundPage = () => {
@@ -50,44 +48,6 @@ const NotFoundPage = () => {
           </button>
         </div>
 
-        {/* Additional Help */}
-        <div className="bg-brand-beige p-6 rounded-xl max-w-md mx-auto">
-          <div className="flex items-center justify-center mb-3">
-            <Search className="w-5 h-5 text-brand-warm-brown mr-2" />
-            <h3 className="text-brand-charcoal font-semibold">Need Help?</h3>
-          </div>
-          <p className="text-brand-warm-brown text-sm mb-4">
-            If you believe this is an error, please contact our support team or try refreshing the page.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={() => window.location.reload()}
-              className="inline-flex items-center px-3 py-2 text-sm bg-brand-light-beige text-brand-warm-brown rounded-md hover:bg-brand-warm-brown hover:text-white transition-colors"
-            >
-              <RefreshCw className="w-3 h-3 mr-1" />
-              Refresh
-            </button>
-            <Link
-              href="/admin"
-              className="inline-flex items-center px-3 py-2 text-sm bg-brand-light-beige text-brand-warm-brown rounded-md hover:bg-brand-warm-brown hover:text-white transition-colors"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-brand-warm-brown text-sm">
-            Still having trouble?{" "}
-            <Link 
-              href="/contact" 
-              className="text-brand-warm-brown hover:text-brand-charcoal underline font-medium"
-            >
-              Contact Support
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );

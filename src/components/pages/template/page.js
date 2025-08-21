@@ -7,10 +7,8 @@ import {
   AlertCircle,
   RefreshCw
 } from "lucide-react";
-import { toast } from "react-toastify";
 import TemplateTable from "./table/page";
 import TemplatePagination from "./pagination/page";
-import TemplateFilter from "./filter/page";
 import TemplateImportModal from "./modal/page";
 
 const TemplatePage = () => {
@@ -27,25 +25,13 @@ const TemplatePage = () => {
     limit: 10
   });
 
-  // State for filters
-  const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("");
-  const [contentType, setContentType] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
 
   // State for modal
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Debounce search term
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
 
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
 
   // Fetch templates function
   const fetchTemplates = useCallback(async (retryCount = 0) => {
@@ -54,11 +40,6 @@ const TemplatePage = () => {
         page: pagination.currentPage,
         limit: pagination.limit
       };
-
-      if (debouncedSearchTerm) params.search = debouncedSearchTerm;
-      if (category) params.category = category;
-      if (contentType) params.contentType = contentType;
-      if (sortBy) params.sortBy = sortBy;
 
       // Build query string
       const queryParams = new URLSearchParams();
@@ -70,7 +51,6 @@ const TemplatePage = () => {
 
       const url = `/admin/templates/canva/available?${queryParams.toString()}`;
       const result = await fetchCanvaData(url);
-      
       if (result?.status === 200 && result?.data) {
         setTemplates(result.data.templates || []);
         setPagination(prev => ({
@@ -87,7 +67,14 @@ const TemplatePage = () => {
         console.error("Template fetch failed: API error occurred");
       } else {
         console.error("Template fetch failed:", result);
-        // Don't show toast here - let the context handle the error display
+        
+        // Check for specific "Failed to fetch templates" error with 500 status
+        if ((result?.data?.error === "Failed to fetch templates" || 
+             result?.error === "Failed to fetch templates") && 
+            result?.status === 500) {
+          // Don't show toast - let the error display handle it
+        }
+        // Don't show any other error toasts here
       }
     } catch (error) {
       console.error("Template fetch error:", error);
@@ -109,9 +96,9 @@ const TemplatePage = () => {
       // Don't show toast here - let the context handle the error display
       // The error will be caught by CanvaContext and displayed in the UI
     }
-  }, [fetchCanvaData, pagination.currentPage, pagination.limit, debouncedSearchTerm, category, contentType, sortBy]);
+  }, [fetchCanvaData, pagination.currentPage, pagination.limit]);
 
-  // Fetch templates when filters change
+  // Fetch templates on mount and when dependencies change
   useEffect(() => {
     fetchTemplates();
   }, [fetchTemplates]);
@@ -121,34 +108,7 @@ const TemplatePage = () => {
     setPagination(prev => ({ ...prev, currentPage: newPage }));
   };
 
-  // Handle search form submission
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Search is already handled by debounced effect
-  };
 
-  // Handle search input change (debounced)
-  const handleSearchChange = (value) => {
-    setSearchTerm(value);
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
-  };
-
-  // Handle apply filters button click
-  const handleApplyFilters = (filters) => {
-    setCategory(filters.category);
-    setContentType(filters.contentType);
-    setSortBy(filters.sortBy);
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
-  };
-
-  // Clear all filters
-  const handleClearFilters = () => {
-    setSearchTerm("");
-    setCategory("");
-    setContentType("");
-    setSortBy("newest");
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
-  };
 
   // Handle template click
   const handleTemplateClick = (template) => {
@@ -192,32 +152,23 @@ const TemplatePage = () => {
       </div>
 
       {/* Error Display */}
-      {canvaError && (
+      {canvaError && canvaError === "Failed to fetch templates" && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
             <div className="flex-1">
               <h3 className="text-sm font-medium text-red-800 mb-1">
-                Error Loading Templates
+                Canva Connection Required
               </h3>
-              <p className="text-sm text-red-700 mb-3">{canvaError}</p>
+              <p className="text-sm text-red-700 mb-3">
+                Please connect first with Canva from settings to access templates.
+              </p>
               <div className="flex gap-2">
                 <button
-                  onClick={() => fetchTemplates()}
-                  disabled={canvaLoading}
-                  className="inline-flex items-center px-3 py-1 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => window.location.href = '/admin/settings'}
+                  className="inline-flex items-center px-3 py-1 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 transition-colors"
                 >
-                  {canvaLoading ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 mr-1 animate-spin" />
-                      Retrying...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="w-4 h-4 mr-1" />
-                      Retry
-                    </>
-                  )}
+                  Go to Settings
                 </button>
               </div>
             </div>
@@ -242,17 +193,7 @@ const TemplatePage = () => {
         </div>
       )}
 
-      {/* Filter Component */}
-      <TemplateFilter
-        searchTerm={searchTerm}
-        category={category}
-        contentType={contentType}
-        sortBy={sortBy}
-        onSearch={handleSearch}
-        onSearchChange={handleSearchChange}
-        onApplyFilters={handleApplyFilters}
-        onClearFilters={handleClearFilters}
-      />
+
 
              {/* Template Table */}
        <TemplateTable 

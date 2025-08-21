@@ -26,7 +26,7 @@ const DeletePlanModal = ({ isOpen, onClose, onSuccess, plan }) => {
       return;
     }
 
-    const result = await deletePlanData(`/plans/${plan._id}`);
+    const result = await deletePlanData(`/delete-plan/${plan._id}`);
 
     if (result?.status === 200) {
       toast.success("Plan deleted successfully");

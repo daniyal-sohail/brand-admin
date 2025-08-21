@@ -34,6 +34,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       label: 'Plans',
       icon: CreditCard,
     },
+
     {
       href: '/admin/faq',
       label: 'FAQ',

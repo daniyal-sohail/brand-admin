@@ -12,6 +12,7 @@ import { FAQProvider } from "@/context/FAQContext";
 import { AdminTemplateProvider } from "@/context/AdminTemplateContext";
 import { PlanProvider } from "@/context/PlanContext";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

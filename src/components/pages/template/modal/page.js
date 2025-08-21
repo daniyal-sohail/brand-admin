@@ -25,9 +25,8 @@ const TemplateImportModal = ({ template, isOpen, onClose, onSuccess }) => {
     caption: "",
     tags: "",
     thumbnailUrl: template?.thumbnail?.url || "",
-    canvaTemplateUrl: template?.urls?.view_url || "",
+    canvaTemplateUrl: "",
   });
-
   const [errors, setErrors] = useState({});
 
   // Reset form when template changes
@@ -41,7 +40,7 @@ const TemplateImportModal = ({ template, isOpen, onClose, onSuccess }) => {
         caption: "",
         tags: "",
         thumbnailUrl: template.thumbnail?.url || "",
-        canvaTemplateUrl: template.urls?.view_url || "",
+        canvaTemplateUrl: "",
       });
       setErrors({});
     }
@@ -67,6 +66,12 @@ const TemplateImportModal = ({ template, isOpen, onClose, onSuccess }) => {
     }
     if (!formData.tags.trim()) {
       newErrors.tags = "Tags are required";
+    }
+    if (!formData.canvaTemplateUrl.trim()) {
+      newErrors.canvaTemplateUrl = "Canva Template URL is required";
+    }
+    if (!formData.thumbnailUrl.trim()) {
+      newErrors.thumbnailUrl = "Thumbnail URL is required";
     }
 
     setErrors(newErrors);
@@ -310,23 +315,32 @@ const TemplateImportModal = ({ template, isOpen, onClose, onSuccess }) => {
           {/* Thumbnail URL */}
           <div>
             <label className="block text-sm font-medium text-brand-charcoal mb-2">
-              Thumbnail URL
+              Thumbnail URL *
             </label>
             <input
               type="url"
               value={formData.thumbnailUrl}
-              onChange={(e) =>
-                handleInputChange("thumbnailUrl", e.target.value)
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-warm-brown"
-              placeholder="Enter thumbnail URL"
+              readOnly
+              className={`w-full px-3 py-2 border rounded-lg bg-gray-50 cursor-not-allowed ${
+                errors.thumbnailUrl ? "border-red-300" : "border-gray-300"
+              }`}
+              placeholder="Template thumbnail URL"
             />
+            {errors.thumbnailUrl && (
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <AlertCircle className="w-4 h-4" />
+                {errors.thumbnailUrl}
+              </p>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
+              This is the template&apos;s default thumbnail and cannot be changed
+            </p>
           </div>
 
           {/* Canva Template URL */}
           <div>
             <label className="block text-sm font-medium text-brand-charcoal mb-2">
-              Canva Template URL
+              Canva Template URL *
             </label>
             <input
               type="url"
@@ -334,9 +348,17 @@ const TemplateImportModal = ({ template, isOpen, onClose, onSuccess }) => {
               onChange={(e) =>
                 handleInputChange("canvaTemplateUrl", e.target.value)
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-warm-brown"
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-warm-brown ${
+                errors.canvaTemplateUrl ? "border-red-300" : "border-gray-300"
+              }`}
               placeholder="Enter Canva template URL"
             />
+            {errors.canvaTemplateUrl && (
+              <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <AlertCircle className="w-4 h-4" />
+                {errors.canvaTemplateUrl}
+              </p>
+            )}
           </div>
 
           {/* Actions */}
