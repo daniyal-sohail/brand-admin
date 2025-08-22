@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // Change as needed
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Change as needed
   withCredentials: false, // Send cookies with requests if needed
 });
 
@@ -24,7 +24,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
       // Optionally handle 401/403 errors globally
       // localStorage.removeItem("token");
       // window.location.href = "/login";
@@ -33,4 +36,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance; 
+export default axiosInstance;
