@@ -1,8 +1,13 @@
 import axios from "axios";
 
+// Determine API base URL with a production-safe fallback
+const resolvedBaseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://brand-appeal-backend.vercel.app/api";
+
 // Create an axios instance
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Change as needed
+  baseURL: resolvedBaseUrl,
   withCredentials: false, // Send cookies with requests if needed
 });
 
